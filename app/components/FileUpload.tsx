@@ -39,14 +39,14 @@ const FileUpload = ({ onFilesProcessed }: FileUploadProps) => {
   const [hasFiles, setHasFiles] = useState(false);
   const [currentData, setCurrentData] = useState<CutListData[]>([]);
 
-  const processFiles = async (files: File[]) => {
+  const processFiles = useCallback(async (files: File[]) => {
     const newCutListData: CutListData[] = [];
-
+  
     for (const file of files) {
       const contents = await readFileAsync(file);
       const loader = new OBJLoader();
       const object = loader.parse(contents);
-
+  
       const parts: Parts = {};
       object.traverse((child: Object3D) => {
         if ((child as Mesh).isMesh) {
@@ -57,20 +57,20 @@ const FileUpload = ({ onFilesProcessed }: FileUploadProps) => {
           };
         }
       });
-
+  
       const dimensions = calculateDimensions(parts);
       newCutListData.push({
         fileName: file.name,
         data: dimensions,
       });
     }
-
+  
     // Merge new data with existing data
     const updatedData = [...currentData, ...newCutListData];
     setCurrentData(updatedData);
     setHasFiles(true);
     onFilesProcessed(updatedData);
-  };
+  }, [currentData, onFilesProcessed]);
 
   const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
