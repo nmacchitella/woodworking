@@ -4,6 +4,7 @@ import { useState, useCallback, ChangeEvent, DragEvent } from 'react';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { Object3D, Mesh } from 'three';
 import { calculateDimensions } from '../utlis/calculateDimenions';
+import Image from 'next/image';
 
 interface DimensionData {
   Part: string;
@@ -119,7 +120,7 @@ const FileUpload = ({ onFilesProcessed }: FileUploadProps) => {
     if (files.length > 0) {
       await processFiles(files);
     }
-  }, []);
+  }, [processFiles]);
 
   const handleStartOver = () => {
     setHasFiles(false);
@@ -142,10 +143,12 @@ const FileUpload = ({ onFilesProcessed }: FileUploadProps) => {
           onDrop={handleDrop}
         >
           <div className="mb-4">
-            <img 
+            <Image 
               src="/file.svg" 
               alt="Upload" 
-              className="w-16 h-16 mx-auto mb-4 opacity-50"
+              width={64}
+              height={64}
+              className="mx-auto mb-4 opacity-50"
             />
             <h3 className="text-xl font-semibold mb-2">
               Drop your .obj files here

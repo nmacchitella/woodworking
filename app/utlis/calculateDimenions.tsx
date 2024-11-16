@@ -1,15 +1,34 @@
 import { convertToFractionalInches } from './convertToFractionalInches';
 
-export const calculateDimensions = (parts) => {
-    const dimensions = [];
+interface Parts {
+  [key: string]: {
+    vertices: ArrayLike<number>;
+  };
+}
+
+interface DimensionData {
+  Part: string;
+  'Length (cm)': number;
+  'Width (cm)': number;
+  'Thick (cm)': number;
+  'Length (in)': number;
+  'Width (in)': number;
+  'Thick (in)': number;
+  'Length (fractional in)': string;
+  'Width (fractional in)': string;
+  'Thick (fractional in)': string;
+}
+
+export const calculateDimensions = (parts: Parts): DimensionData[] => {
+    const dimensions: DimensionData[] = [];
   
     for (const [partName, partData] of Object.entries(parts)) {
       const vertices = partData.vertices;
   
       // Separate x, y, z coordinates
-      const xCoords = vertices.filter((_, i) => i % 3 === 0);
-      const yCoords = vertices.filter((_, i) => i % 3 === 1);
-      const zCoords = vertices.filter((_, i) => i % 3 === 2);
+      const xCoords = Array.from(vertices).filter((_, i) => i % 3 === 0);
+      const yCoords = Array.from(vertices).filter((_, i) => i % 3 === 1);
+      const zCoords = Array.from(vertices).filter((_, i) => i % 3 === 2);
   
       // Calculate dimensions in meters
       const dimensionsM = [
@@ -26,8 +45,6 @@ export const calculateDimensions = (parts) => {
 
       const dimensionsInches = sortedCm.map((d) => parseFloat((d * 0.393701).toFixed(4)));
       const dimensionsFractional = sortedCm.map((d) => convertToFractionalInches(d));
-
-    
   
       // Add part dimensions to the result
       dimensions.push({
@@ -46,4 +63,3 @@ export const calculateDimensions = (parts) => {
   
     return dimensions;
   };
-  

@@ -1,4 +1,4 @@
-export const convertToFractionalInches = (decimal) => {
+export const convertToFractionalInches = (decimal:number) => {
     // Convert to inches with good precision
     decimal = parseFloat((decimal * 0.393701).toFixed(6));
   
@@ -22,7 +22,7 @@ export const convertToFractionalInches = (decimal) => {
     let bestError = decimalPart;
   
     // Check denominators 1 through 64 (this could be increased for finer fractions)
-    for (let denominator of [2, 4, 8, 16, 32, 64]) {
+    for (const denominator of [2, 4, 8, 16, 32, 64]) {
       const numerator = Math.round(decimalPart * denominator);
       const error = Math.abs(decimalPart - numerator / denominator);
   
@@ -34,7 +34,7 @@ export const convertToFractionalInches = (decimal) => {
     }
   
     // Simplify the fraction by finding the greatest common divisor (GCD)
-    const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
+    const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
     const divisor = gcd(bestNumerator, bestDenominator);
   
     bestNumerator /= divisor;
